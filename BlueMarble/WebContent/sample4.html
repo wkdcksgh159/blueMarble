@@ -21,6 +21,7 @@
 <script src="/BlueMarble/script/jquery-ui.js"></script>
 <script src="/BlueMarble/script/player.js"></script>
 <script src="/BlueMarble/script/city.js"></script>
+<script src="/BlueMarble/script/function.js"></script>
 <body>
 <h3>
    부르마블
@@ -99,7 +100,7 @@
       <td id="p27"><div class="player">0</div><div class="city">하와이</div><div class="gold">260000</div></td>
       <td id="p26"><div class="player">0</div><div class="city">부산</div><div class="gold">500000</div></td>
       <td id="p25"><div class="player">0</div><div class="city">시드니</div><div class="gold">240000</div></td>
-      <td id="p24"><div class="player">0</div><div class="city">쌍파울로</div><div class="gold">240000</div></td>
+      <td id="p24"><div class="player">0</div><div class="city">상파울로</div><div class="gold">240000</div></td>
       <td id="p23"><div class="player">0</div><div class="event">황금열쇠</div><div class="gold">23</div></td>
       <td id="p22"><div class="player">0</div><div class="city">부에노스아이레스</div><div class="gold">220000</div></td>
       <td id="p21"><div class="player">0</div><div class="event">사회복지기금(주는곳)</div><div class="gold">21</div></td>
@@ -112,13 +113,15 @@
 </body>
 <script>
    $(document).ready(function(){
+	 //플레이어 초기화
+       let player = 1;
 	  $("#diceBtn").attr("disabled", true);
 	  //인원수 파악
 	  start = false;
 	  let allPlayer = "";
 	  while(start == false) {
 		  allPlayer = prompt("몇명이서 플레이합니까? (1~4까지의 숫자만 입력가능)");
-		  if(allPlayer > 0 && allPlayer < 5){
+		  if(allPlayer > 1 && allPlayer < 5){
 			  alert("게임시작")
 			  $("#diceBtn").attr("disabled", false);
 			  start = true;
@@ -128,26 +131,22 @@
 		  }
 	  }
 	  //플레이어 수 만큼 돈, 이미지 세팅
-	  for(i=1; i < parseInt(allPlayer)+1; i++){
+	  for(i=1; i <= allPlayer; i++){
 		  let playerMoneyHtml = "플레이어"+i+" 돈 : <input type='text' id='player"+i+"money' value='3000000'>";
 		  $("#allPlayer").append(playerMoneyHtml);
 	  }
-	  for(i=1; i < parseInt(allPlayer)+1; i++){
+	  for(i=1; i <= allPlayer; i++){
 		  let playerHtml = "<img class='btn-danger"+i+"' src='/jquery-prac/image/pic0"+i+".jpg'>";
 		  $("#btn").append(playerHtml);
 	  }
-	  //플레이어
-      let player = 1;
       //주사위 클릭시
       $("#diceBtn").click(function(){
-    	 let dialogHtml = "<div id='dialog' title='도시이름'>대지 <input type='radio' name='build' id='land' checked='checked'><span id='landToll'></span><br>별장 <input type='radio' name='build' id='villa'><span id='villaToll'></span><br>빌딩 <input type='radio' name='build' id='building'><span id='buildingToll'></span><br>호텔 <input type='radio' name='build' id='hotel'><span id='hotelToll'></span><br><button type='button' id='buy'>구매</button><button type='button' id='cancel'>취소</button></div>";
-    	 $("#dialogTag").append(dialogHtml);
     	 //주사위 세팅(1~6까지 숫자 랜덤)
          let ran1 = Math.floor(Math.random()*6+1);
     	 console.log("ran1 : ", ran1);
          let ran2 = Math.floor(Math.random()*6+1);
          console.log("ran2 : ", ran2);
-         ran = ran1+ran2
+         ran = ran1+ran2;
          $("#diceValue").val(ran);
          
          
@@ -193,6 +192,10 @@
             if($(gamer.afterId).find(".player").text() == 0){
             	cityName = $(gamer.afterId).find(".city").text();
             	console.log("cityName : ", cityName);
+            	//dialog 팝업 세팅
+        		let dialogHtml = "<div id='dialog' title='"+cityName+"'>대지 <input type='radio' name='build' id='land' checked='checked'><span id='landToll'></span><br>별장 <input type='radio' name='build' id='villa'><span id='villaToll'></span><br>빌딩 <input type='radio' name='build' id='building'><span id='buildingToll'></span><br>호텔 <input type='radio' name='build' id='hotel'><span id='hotelToll'></span><br><button type='button' id='buy'>구매</button><button type='button' id='cancel'>취소</button></div>";
+           		$("#dialogTag").append(dialogHtml);
+           		//도시 객체를 저장할 변수 선언
             	let city = "";
             	switch(cityName){
             		case "타이페이":
@@ -286,8 +289,10 @@
 	            		city = null;
 	            		break;
             	}
+            	//디버깅
             	console.log("city : ", city);
             	if(city != null){
+            		console.log("city player : ",player);
             		//땅 구매여부를 선택할때까지 주사위 비활성화
                 	$("#diceBtn").attr("disabled", true);
                 	$("#dialog").dialog({
@@ -305,65 +310,58 @@
                 		$("#building").attr("disabled", false);
                 		$("#hotel").attr("disabled", false);
                 	}
-                	$("#landToll").text(" 통행료 "+ city.대지료통행시+"원");
-                	$("#villaToll").text(" 통행료 "+ city.별장통행시+"원");
-                	$("#buildingToll").text(" 통행료 "+ city.빌딩통행시+"원");
-                	$("#hotelToll").text(" 통행료 "+ city.호텔통행시+"원");
+                	$("#landToll").text(" 구매료 "+ city.대지료구매+"원");
+                	$("#villaToll").text(" 구매료 "+ parseInt(city.대지료구매+city.별장구매)+"원");
+                	$("#buildingToll").text(" 구매료 "+ parseInt(city.대지료구매+city.빌딩구매)+"원");
+                	$("#hotelToll").text(" 구매료 "+ parseInt(city.대지료구매+city.호텔구매)+"원");
+                	//구매버튼 클릭시 함수 실행
                 	$("#buy").click(function(){
                 		console.log("buy 클릭 실행!");
                 		console.log("buy player : ", player);
+                		//땅 주인 세팅 (플레이어1 이면 1 이 들어감)
+                        $(gamer.afterId).find(".player").text(player);
+                		//radio타입 클릭한 내용 찾기 (땅, 별장, 빌딩, 호텔)
                 		if($('input[name="build"]:checked').is("#land")){
-                			console.log("땅 구매 : ", player);
-                			//땅 주인 세팅 (플레이어1 이면 1 이 들어감)
-                            $(gamer.afterId).find(".player").text(player);
                           	//주인이없으면 땅 가격 세팅
                           	$(gamer.afterId).find(".gold").text(city.대지료통행시);
                           	console.log("대지료구매 전 머니", gamer.money);
                           	console.log("구매료 : ", city.대지료구매);
                           	gamer.money = gamer.money-city.대지료구매;
                           	console.log("대지료구매 후 머니", gamer.money);
-                          	$("#player"+player+"money").val(gamer.money);
                 		}
                 		if($('input[name="build"]:checked').is("#villa")){
-                			//별장 주인 세팅 (플레이어1 이면 1 이 들어감)
-                            $(gamer.afterId).find(".player").text(player);
                             //주인이없으면 별장 가격 세팅
                             $(gamer.afterId).find(".gold").text(city.별장통행시);
                             console.log("별장구매 전 머니", gamer.money);
                             console.log("구매료 : ", city.대지료구매+city.별장구매);
                           	gamer.money = gamer.money-city.대지료구매-city.별장구매;
                           	console.log("별장구매 후 머니", gamer.money);
-                          	$("#player"+player+"money").val(gamer.money);
-                          	
                 		}
                 		if($('input[name="build"]:checked').is("#building")){
-                			//빌딩 주인 세팅 (플레이어1 이면 1 이 들어감)
-                            $(gamer.afterId).find(".player").text(player);
                             //주인이없으면 빌딩 가격 세팅
                             $(gamer.afterId).find(".gold").text(city.빌딩통행시);
                             console.log("빌딩구매 전 머니", gamer.money);
                             console.log("구매료 : ", city.대지료구매+city.빌딩구매);
                           	gamer.money = gamer.money-city.대지료구매-city.빌딩구매;
                           	console.log("빌딩구매 후 머니", gamer.money);
-                          	$("#player"+player+"money").val(gamer.money);
                 		}
                 		if($('input[name="build"]:checked').is("#hotel")){
-                			//호텔 주인 세팅 (플레이어1 이면 1 이 들어감)
-                            $(gamer.afterId).find(".player").text(player);
                             //호텔 가격 세팅
                             $(gamer.afterId).find(".gold").text(city.호텔통행시);
                             console.log("호텔구매 전 머니", gamer.money);
                             console.log("구매료 : ", city.대지료구매+city.호텔구매);
                           	gamer.money = gamer.money-city.대지료구매-city.호텔구매;
                           	console.log("호텔구매 후 머니", gamer.money);
-                          	$("#player"+player+"money").val(gamer.money);
                 		}
+                		$("#player"+player+"money").val(gamer.money);
                         //주사위 활성화
                 		$("#diceBtn").attr("disabled", false);
                         //dialog 닫기
                 		$("#dialog").dialog("close");
                 		$("#dialog").remove();
-                	})
+                		//더블을 확인하는 함수
+                        player = doubleDice(ran1, ran2, player, allPlayer);
+                	});
                 	$("#cancel").click(function(){
                 		//dialog 닫기
                 		$("#diceBtn").attr("disabled", false);
@@ -391,24 +389,43 @@
             		}
             		$("#dialog").remove();
             	}
+            	
             } else {
                //주인이 있으면 땅 가격만큼 가진 돈에서 차감
                console.log("결제 전 머니: ", gamer.money);
                gamer.money = gamer.money-($(gamer.afterId).find(".gold").text());
                console.log("결제 후 머니: ", gamer.money);
                $("#player"+player+"money").val(gamer.money);
+               //밟은 땅 주인에게 돈 추가
+               //땅 주인 객체 선언
+               let payPlayer = "";
+               //땅 주인체크
+               landPlayer = parseInt($(gamer.afterId).find(".player").text());
+               switch(landPlayer){
+               case 1:
+	     		    payPlayer = Player1;
+	     		    console.log("땅 주인 Player",landPlayer);
+	     		    break;
+               case 2:
+	     			payPlayer = Player2;
+	  		    	console.log("땅 주인 Player",landPlayer);
+	  		    	break;
+               case 3:
+	     			payPlayer = Player3;
+	  		    	console.log("땅 주인 Player",landPlayer);
+	  		    	break;
+               case 4:
+	     			payPlayer = Player4;
+	  		    	console.log("땅 주인 Player",landPlayer);
+	  		    	break;
+               }
+               console.log("통행료 받기 전 머니 : ", payPlayer.money);
+               payPlayer.money = payPlayer.money + parseInt($(gamer.afterId).find(".gold").text());
+               console.log("통행료 받기 후 머니 : ", payPlayer.money);
+               $("#player"+landPlayer+"money").val(payPlayer.money);
                $("#dialog").remove();
             }
-            // 플레이어 변경
-            if(ran1 != ran2){
-           	 	player++;
-           	 if(player>allPlayer){
-           		 console.log("allPlayer : ", allPlayer);
-               	 player = player-allPlayer;
-             }
-            } else {
-           	 console.log("더블!");
-            }
+          
       });
    });
 </script>
