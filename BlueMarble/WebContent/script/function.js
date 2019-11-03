@@ -1,7 +1,7 @@
 /**
- * 
+ *  부루마블 함수 모음
  */
-
+//주사위 더블 체크
 function doubleDice(ran1, ran2, player, allPlayer){
 	console.log("doubleDice 함수 실행 확인!");
 	console.log("allPlayer : ", allPlayer);
@@ -14,13 +14,27 @@ function doubleDice(ran1, ran2, player, allPlayer){
        	 player = player-allPlayer;
      }
     } else {
-   	 console.log("더블!");
+	   	 console.log("더블!");
+	   	 if(gamer.afterPoint == 11){
+	   		player++;
+	   		if(player>allPlayer){
+	      		 console.log("allPlayer : ", allPlayer);
+	          	 player = player-allPlayer;
+	        }
+	   	 }
+	   	 if(gamer.afterPoint == 31){
+	   		player++;
+	   		if(player>allPlayer){
+	      		 console.log("allPlayer : ", allPlayer);
+	          	 player = player-allPlayer;
+	        }
+	   	 }
     }
     console.log("doubleDice player : ", player);
     return player;
 }
 
-
+//도착한 도시 이름 찾기
 function cityNameReturn(cityName){
 	switch(cityName){
 	case "타이페이":
@@ -115,4 +129,49 @@ function cityNameReturn(cityName){
 		break;
 	}
 	return city;
+}
+
+//사회복지기금(내는곳)
+function donateGive(gamer, player){
+	//디버깅
+	console.log("기부 성공!");
+	//사회 복지 기금 15만원 지출 
+    gamer.money -= 150000;
+    console.log("donateGive : ", gamer.money);
+    
+    donate = parseInt($("#p21").find(".gold").text());
+    donate += 150000;
+    console.log("donate : ", donate);
+    $("#p21").find(".gold").empty();
+    $("#p21").find(".gold").text(donate);
+    
+    return gamer.money;
+}
+
+//사회복지기금(받는곳)
+function donateReceive(gamer){
+	//사회 복지 단체 기부금 다 받음
+	donate = parseInt($("#p21").find(".gold").text());
+	gamer.money += donate;
+    console.log(gamer.money);
+
+    $("#p21").find(".gold").text(0);
+    
+    return gamer.money;
+}
+
+//무인도
+function island(gamer, ran1, ran2){
+	//무인도 도착
+    console.log("무인도 함수 실행 확인!");
+    console.log("무인도에 빠짐");
+	if(gamer.round>3 || ran1 == ran2){//3번 차례가 지나거나 ,주사위가 더블일때
+		console.log("무인도 탈출!");
+    	gamer.round = 0;
+	}else{
+		console.log("무인도 잔류..");
+		gamer.round+=1;
+	}
+    
+    return gamer.round;
 }
