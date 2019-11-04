@@ -22,7 +22,7 @@ function doubleDice(ran1, ran2, player, allPlayer){
 	          	 player = player-allPlayer;
 	        }
 	   	 }
-	   	 if(gamer.afterPoint == 31){
+	   	 if(gamer.afterPoint == 31 || gamer.beforePoint == 31){
 	   		player++;
 	   		if(player>allPlayer){
 	      		 console.log("allPlayer : ", allPlayer);
@@ -175,3 +175,4 @@ function island(gamer, ran1, ran2){
     
     return gamer.round;
 }
+

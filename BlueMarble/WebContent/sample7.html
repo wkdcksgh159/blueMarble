@@ -126,7 +126,7 @@
 <script>
    $(document).ready(function(){
 	 //플레이어 초기화
-       let player = 1;
+      let player = 1;
 	  $("#diceBtn").attr("disabled", true);
 	  //인원수 파악
 	  start = false;
@@ -200,9 +200,8 @@
             if(gamer.beforePoint == 11){
             	gamer.round = island(gamer, ran1, ran2);
             }
-            
-            //현재위치가 우주여행일때
-            if(gamer.afterPoint == 31){
+          	//현재위치가 우주여행일때
+            if(gamer.beforePoint == 31){
             	console.log("우주여행 시작!");
             	$(".place").click(function(){
             		console.log
@@ -212,13 +211,11 @@
             		gamer.afterId = "#p" + gamer.afterPoint;
             		console.log("우주여행 gamer.afterPoint", gamer.afterPoint);
             		$(gamer.beforeId).find(".btn-danger"+gamer.player).remove();
-            		$(this).append(html);
-            		gamer.beforePoint = gamer.afterPoint;
+            		$(this).append("<img class='btn-danger"+gamer.player+"' src='/jquery-prac/image/pic0"+gamer.player+".jpg'>");
+            		gamer.beforePoint = parseInt(gamer.afterPoint);
             		gamer.round = 0;
-            		return;
             	});
             }
-            
             //round 체크
             if(gamer.round == 0){
             	//위치 이동
@@ -227,9 +224,10 @@
               	//이동위치를 현재위치로 변경
                 gamer.beforePoint = gamer.afterPoint;
             } else {
-            	//위치 그대로
-            	console.log("round gamer.beforePoint", gamer.beforePoint);
-            	gamer.afterId = gamer.beforeId;
+               	//위치 그대로
+               	console.log("round gamer.beforePoint", gamer.beforePoint);
+               	gamer.afterId = gamer.beforeId;
+               
             	/*
             	console.log("round gamer.afterId", gamer.afterId);
             	$(gamer.beforeId).find(".btn-danger"+player).remove();
