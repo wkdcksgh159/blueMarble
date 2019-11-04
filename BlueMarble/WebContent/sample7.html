@@ -153,6 +153,8 @@
 	  }
       //주사위 클릭시
       $("#diceBtn").click(function(){
+    	//테이블 클릭잠금
+      	$(".place").attr("disabled", true);
     	 //주사위 세팅(1~6까지 숫자 랜덤)
          let ran1 = Math.floor(Math.random()*6+1);
     	 console.log("ran1 : ", ran1);
@@ -200,8 +202,10 @@
             if(gamer.beforePoint == 11){
             	gamer.round = island(gamer, ran1, ran2);
             }
+            //버튼 따로 빼야됨 계속 이동가능함
           	//현재위치가 우주여행일때
             if(gamer.beforePoint == 31){
+            	$(".place").attr("disabled", false);
             	console.log("우주여행 시작!");
             	$(".place").click(function(){
             		console.log
@@ -214,6 +218,8 @@
             		$(this).append("<img class='btn-danger"+gamer.player+"' src='/jquery-prac/image/pic0"+gamer.player+".jpg'>");
             		gamer.beforePoint = parseInt(gamer.afterPoint);
             		gamer.round = 0;
+            		//테이블 클릭잠금
+                	$(".place").attr("disabled", true);
             	});
             }
             //round 체크
