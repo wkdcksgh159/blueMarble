@@ -182,6 +182,9 @@ function pay(gamer){
     if($(gamer.afterId).find(".player").text() == 0){
     	let cityName = $(gamer.afterId).find(".city").text();
     	console.log("cityName : ", cityName);
+    	//dialog 팝업 세팅
+		let dialogHtml = "<div id='dialog' title='"+cityName+"'>대지 <input type='radio' name='build' id='land' checked='checked'><span id='landToll'></span><br>별장 <input type='radio' name='build' id='villa'><span id='villaToll'></span><br>빌딩 <input type='radio' name='build' id='building'><span id='buildingToll'></span><br>호텔 <input type='radio' name='build' id='hotel'><span id='hotelToll'></span><br><button type='button' id='buy'>구매</button><button type='button' id='cancel'>취소</button></div>";
+   		$("#dialogTag").append(dialogHtml);
    		//도시 객체를 저장할 변수 선언
     	let city = "";
     	city = cityNameReturn(cityName);
@@ -198,9 +201,13 @@ function pay(gamer){
         	    }
         	});
         	if(city == 제주도 || city == 콩코드여객기 || city == 부산 || city == 퀸엘리자베스호 || city == 콜럼비아호 || city == 서울){
-        		$("#villaDiv").hide();//attr("disabled", true);
+        		$("#villaDiv").hide();
         		$("#buildingDiv").hide();
         		$("#hotelDiv").hide();
+        	} else {
+        		$("#villaDiv").show();
+        		$("#buildingDiv").show();
+        		$("#hotelDiv").show();
         	}
         	$("#landToll").text(" 구매료 "+ city.대지료구매+"원");
         	$("#villaToll").text(" 구매료 "+ parseInt(city.대지료구매+city.별장구매)+"원");
@@ -250,12 +257,17 @@ function pay(gamer){
         		$("#diceBtn").attr("disabled", false);
                 //dialog 닫기
         		$("#dialog").dialog("close");
+        		//dialog 팝업 삭제
+        		$("#dialog").remove();
         	});
         	$("#cancel").click(function(){
         		//dialog 닫기
         		$("#diceBtn").attr("disabled", false);
         		$("#dialog").dialog("close");
+        		//dialog 팝업 삭제
+        		$("#dialog").remove();
         	});
+        	
     	} else {
     		event = $(gamer.afterId).find(".event").text();
     		switch(event){
@@ -267,13 +279,13 @@ function pay(gamer){
         			gamer.money = donateGive(gamer, player);
         			console.log("donateGamer : ",gamer.money);
         			console.log("donatePlayer : ", player);
-        			$("#player"+player+"money").val(gamer.money);
+        			$("#player"+gamer.player+"money").val(gamer.money);
         			break;
         		case "사회복지기금(받는곳)":
         			console.log("사회복지기금(받는곳) 도착!");
         			gamer.money = donateReceive(gamer);
         			console.log("donateReGamer : ",gamer.money);
-        			$("#player"+player+"money").val(gamer.money);
+        			$("#player"+gamer.player+"money").val(gamer.money);
         			break;
         		case "무인도":
         			console.log("무인도 도착!");
@@ -287,12 +299,41 @@ function pay(gamer){
         			gamer.round+=1;
         			break;
     		}
+    		//dialog 팝업 삭제
+    		$("#dialog").remove();
     	}
     	
     } else {
        //현재 돈이 없을경우
-       if(gamer.money == 0){
-    	   
+       if(gamer.money < 1){
+    	   console.log("player 클래스 불러옴");
+    	   for(i=1;i<41;i++){
+    		   id = "#p"+i;
+    		   if($(id).find(".player").text() == gamer.player){
+    			   console.log("해당 id 도시 이름 출력  : ", $(id).find(".city").text());
+    		   }
+    	   }
+    	   /*
+    	   testArray = [];
+    	   citytestArray = [];
+    	   test = $(".place").find(".player").text();
+    	   ttest = test.split("");
+    	   console.log("test : ", test);
+    	   console.log("ttest : ", ttest);
+    	   for(i=0;i<ttest.length;i++){
+    		   if(gamer.player == ttest[i]){
+    			   console.log(">>>>>if playerBuild ");
+    			   testArray.push(ttest[i]);
+        		   //citytestArray.push(cityttest[i]);
+    			   console.log(">>>>>>>> i : ", i);
+        	   } else {
+        		   console.log("보유중인 건물 없음");
+        	   }
+    	   }
+    	   console.log("testArray : ", testArray);
+    	   console.log("citytestArray : ", citytestArray);
+    	   //console.log("playerBuild : ", playerBuild);
+    	   */
        } else {
     	   
        }
@@ -302,7 +343,6 @@ function pay(gamer){
        console.log("결제 후 머니: ", gamer.money);
        $("#player"+gamer.player+"money").val(gamer.money);
        //밟은 땅 주인에게 돈 추가
-       //땅 주인 객체 선언
        let payPlayer = "";
        //땅 주인체크
        landPlayer = parseInt($(gamer.afterId).find(".player").text());
@@ -328,5 +368,7 @@ function pay(gamer){
        payPlayer.money = payPlayer.money + parseInt($(gamer.afterId).find(".gold").text());
        console.log("통행료 받기 후 머니 : ", payPlayer.money);
        $("#player"+landPlayer+"money").val(payPlayer.money);
+       //dialog 팝업 삭제
+       $("#dialog").remove();
     }
 }
