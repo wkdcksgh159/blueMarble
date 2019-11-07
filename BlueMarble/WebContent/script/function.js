@@ -183,7 +183,7 @@ function pay(gamer){
     	let cityName = $(gamer.afterId).find(".city").text();
     	console.log("cityName : ", cityName);
     	//dialog 팝업 세팅
-		let dialogHtml = "<div id='dialog' title='"+cityName+"'>대지 <input type='radio' name='build' id='land' checked='checked'><span id='landToll'></span><br>별장 <input type='radio' name='build' id='villa'><span id='villaToll'></span><br>빌딩 <input type='radio' name='build' id='building'><span id='buildingToll'></span><br>호텔 <input type='radio' name='build' id='hotel'><span id='hotelToll'></span><br><button type='button' id='buy'>구매</button><button type='button' id='cancel'>취소</button></div>";
+		let dialogHtml = "<div id='dialog' title='"+cityName+"'><div id='landDiv'>대지 <input type='radio' name='build' id='land' checked='checked'><span id='landToll'></span></div><div id='villaDiv'>별장 <input type='radio' name='build' id='villa'><span id='villaToll'></span></div><div id='buildingDiv'>빌딩 <input type='radio' name='build' id='building'><span id='buildingToll'></span></div><div id='hotelDiv'>호텔 <input type='radio' name='build' id='hotel'><span id='hotelToll'></span></div><button type='button' id='buy'>구매</button><button type='button' id='cancel'>취소</button></div>";
    		$("#dialogTag").append(dialogHtml);
    		//도시 객체를 저장할 변수 선언
     	let city = "";
@@ -227,6 +227,7 @@ function pay(gamer){
                   	console.log("구매료 : ", city.대지료구매);
                   	gamer.money = gamer.money-city.대지료구매;
                   	console.log("대지료구매 후 머니", gamer.money);
+                  	city.대지구매여부 = city.대지구매여부 + 1;
         		}
         		if($('input[name="build"]:checked').is("#villa")){
                     //주인이없으면 별장 가격 세팅
@@ -235,6 +236,7 @@ function pay(gamer){
                     console.log("구매료 : ", city.대지료구매+city.별장구매);
                   	gamer.money = gamer.money-city.대지료구매-city.별장구매;
                   	console.log("별장구매 후 머니", gamer.money);
+                  	city.별장구매여부 = city.별장구매여부 + 1;
         		}
         		if($('input[name="build"]:checked').is("#building")){
                     //주인이없으면 빌딩 가격 세팅
@@ -243,6 +245,7 @@ function pay(gamer){
                     console.log("구매료 : ", city.대지료구매+city.빌딩구매);
                   	gamer.money = gamer.money-city.대지료구매-city.빌딩구매;
                   	console.log("빌딩구매 후 머니", gamer.money);
+                  	city.빌딩구매여부 = city.빌딩구매여부 + 1;
         		}
         		if($('input[name="build"]:checked').is("#hotel")){
                     //호텔 가격 세팅
@@ -251,6 +254,7 @@ function pay(gamer){
                     console.log("구매료 : ", city.대지료구매+city.호텔구매);
                   	gamer.money = gamer.money-city.대지료구매-city.호텔구매;
                   	console.log("호텔구매 후 머니", gamer.money);
+                  	city.호텔구매여부 = city.호텔구매여부 + 1;
         		}
         		$("#player"+gamer.player+"money").val(gamer.money);
                 //주사위 활성화
@@ -311,6 +315,46 @@ function pay(gamer){
     		   id = "#p"+i;
     		   if($(id).find(".player").text() == gamer.player){
     			   console.log("해당 id 도시 이름 출력  : ", $(id).find(".city").text());
+    			   sellCityName = $(id).find(".city").text();
+    			   sellBuild = "<span id='sellSpan' title='현재 보유중인 도시'>"+
+				    				"<div><br>"+sellCityName+"</div>"+
+			    					"<span id='sellLandDiv'>대지<input type='checkbox' checked='checked' disabled='disabled'></span>"+
+			    					"<span id='sellVillaDiv'>별장<input type='checkbox'></span><br>"+
+			    					"<span id='sellBuildingDiv'>빌딩<input type='checkbox'></span>"+
+			    					"<span id='sellHotelDiv'>호텔<input type='checkbox'></span>"+
+			    					"<button type='button' id='sell'>판매</button>"+
+			    					"<button type='button' id='sellCancel'>취소</button></div>"+
+				    			"</span>"
+    			   $("#sellBuild").append(sellBuild);
+    			   sellCity = cityNameReturn(sellCityName);
+    			   console.log("sellCity : ", sellCity);
+    			   $("#sellLandDiv").hide();
+    			   $("#sellVillaDiv").hide();
+    			   $("#sellBuildingDiv").hide();
+    			   $("#sellHotelDiv").hide();
+    			   if(sellCity.대지구매여부 == 1){
+    				   $("#sellLandDiv").show();
+    			   }
+    			   if(sellCity.별장구매여부 == 1){
+    				   $("#sellVillaDiv").show();
+    			   }
+    			   if(sellCity.빌딩구매여부 == 1){
+    				   $("#sellBuildingDiv").show();
+    			   }
+    			   if(sellCity.호텔구매여부 == 1){
+    				   $("#sellHotelDiv").show();
+    			   }
+    			   //땅 구매여부를 선택할때까지 주사위 비활성화
+		        	$("#diceBtn").attr("disabled", true);
+		        	$("#sellSpan").dialog({
+		        		closeOnEscape: false,
+		        	    open: function(event, ui) {
+		        	            $(".ui-dialog-titlebar-close", $(this).parent()).hide();
+		        	    }
+		        	});
+		        	$("#sell").click(function(){
+		        		if($("input[type=checkbox]").prop("disabled",false);)
+	    			});
     		   }
     	   }
     	   /*
