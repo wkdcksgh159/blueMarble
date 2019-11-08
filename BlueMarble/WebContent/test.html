@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="/BlueMarble/script/jquery-3.4.1.min.js"></script>
 <style>
 	#sellSpan {
 		display:inline-block;
@@ -19,11 +20,21 @@
 	<span id="sellSpan">
 		<div><br>타이페이</div>
 		<div>
-			<span>대지<input type="checkbox" checked="checked" disabled="disabled"></span>
-			<span>별장<input type="checkbox"></span><br>
-			<span>빌딩<input type="checkbox"></span>
-			<span>호텔<input type="checkbox"></span>
+			<span>대지<input type="checkbox" class="landCheck" disabled="disabled"></span>
+			<span>별장<input type="checkbox" class="check"></span><br>
+			<span>빌딩<input type="checkbox" class="check"></span>
+			<span>호텔<input type="checkbox" class="check"></span>
 		</div>
 	</span>
 </body>
+<script>
+	$(document).ready(function(){
+		$(".check").change(function(){
+			if($(".check:checked").length == $(".check").length){
+				$(".landCheck").attr("disabled", false);
+			}
+		});
+	});
+	
+</script>
 </html>

@@ -316,70 +316,61 @@ function pay(gamer){
     		   if($(id).find(".player").text() == gamer.player){
     			   console.log("해당 id 도시 이름 출력  : ", $(id).find(".city").text());
     			   sellCityName = $(id).find(".city").text();
-    			   sellBuild = "<span id='sellSpan' title='현재 보유중인 도시'>"+
-				    				"<div><br>"+sellCityName+"</div>"+
-			    					"<span id='sellLandDiv'>대지<input type='checkbox' checked='checked' disabled='disabled'></span>"+
-			    					"<span id='sellVillaDiv'>별장<input type='checkbox'></span><br>"+
-			    					"<span id='sellBuildingDiv'>빌딩<input type='checkbox'></span>"+
-			    					"<span id='sellHotelDiv'>호텔<input type='checkbox'></span>"+
-			    					"<button type='button' id='sell'>판매</button>"+
-			    					"<button type='button' id='sellCancel'>취소</button></div>"+
-				    			"</span>"
-    			   $("#sellBuild").append(sellBuild);
     			   sellCity = cityNameReturn(sellCityName);
     			   console.log("sellCity : ", sellCity);
-    			   $("#sellLandDiv").hide();
-    			   $("#sellVillaDiv").hide();
-    			   $("#sellBuildingDiv").hide();
-    			   $("#sellHotelDiv").hide();
+    			   //판매 팝업 생성
+    			   sellBuild = "<span id='sellSpan'>"+$(id).find(".city").text()+"<br>";
     			   if(sellCity.대지구매여부 == 1){
-    				   $("#sellLandDiv").show();
+    				   sellBuild += "<span id='sellLandDiv'>대지<input type='checkbox' disabled='disabled'></span>";
     			   }
     			   if(sellCity.별장구매여부 == 1){
-    				   $("#sellVillaDiv").show();
+    				   sellBuild += "<span id='sellVillaDiv'>별장<input type='checkbox'></span><br>";
     			   }
     			   if(sellCity.빌딩구매여부 == 1){
-    				   $("#sellBuildingDiv").show();
+    				   sellBuild += "<span id='sellBuildingDiv'>빌딩<input type='checkbox'></span>";
     			   }
     			   if(sellCity.호텔구매여부 == 1){
-    				   $("#sellHotelDiv").show();
+    				   sellBuild += "<span id='sellHotelDiv'>호텔<input type='checkbox'></span><br>";
     			   }
-    			   //땅 구매여부를 선택할때까지 주사위 비활성화
-		        	$("#diceBtn").attr("disabled", true);
-		        	$("#sellSpan").dialog({
-		        		closeOnEscape: false,
-		        	    open: function(event, ui) {
-		        	            $(".ui-dialog-titlebar-close", $(this).parent()).hide();
-		        	    }
-		        	});
-		        	$("#sell").click(function(){
-		        		if($("input[type=checkbox]").prop("disabled",false);)
-	    			});
+    			   //판매, 취소버튼 생성
+    			   sellBuild += "<button type='button' id='sell'>판매</button>";
+    			   sellBuild += "<button type='button' id='sellCancel'>취소</button></div>";
+    			   sellBuild += "</span>";
+    			   $("#sellBuild").append(sellBuild);
+    			   
     		   }
     	   }
+		   // 땅 구매여부를 선택할때까지 주사위 비활성화
+		   $("#diceBtn").attr("disabled", true);
+		   $("#sellBuild").dialog({
+			   closeOnEscape : false,
+			   open : function(event, ui) {
+				   $(".ui-dialog-titlebar-close", $(this).parent()).hide();
+			   }
+		   });
+		   //모든 건물이 체크되면 대지 체크박스 활성화
+		   $(".check").change(function(){
+				if($(".check:checked").length == $(".check").length){
+					$(".landCheck").attr("disabled", false);
+				} else {
+					$(".landCheck").attr("disabled", true);
+				}
+		   });
+		   $("#sell").click(function() {
+			   
+		   });
     	   /*
-    	   testArray = [];
-    	   citytestArray = [];
-    	   test = $(".place").find(".player").text();
-    	   ttest = test.split("");
-    	   console.log("test : ", test);
-    	   console.log("ttest : ", ttest);
-    	   for(i=0;i<ttest.length;i++){
-    		   if(gamer.player == ttest[i]){
-    			   console.log(">>>>>if playerBuild ");
-    			   testArray.push(ttest[i]);
-        		   //citytestArray.push(cityttest[i]);
-    			   console.log(">>>>>>>> i : ", i);
-        	   } else {
-        		   console.log("보유중인 건물 없음");
-        	   }
-    	   }
-    	   console.log("testArray : ", testArray);
-    	   console.log("citytestArray : ", citytestArray);
-    	   //console.log("playerBuild : ", playerBuild);
-    	   */
-       } else {
-    	   
+			 * testArray = []; citytestArray = []; test =
+			 * $(".place").find(".player").text(); ttest = test.split("");
+			 * console.log("test : ", test); console.log("ttest : ", ttest);
+			 * for(i=0;i<ttest.length;i++){ if(gamer.player == ttest[i]){
+			 * console.log(">>>>>if playerBuild "); testArray.push(ttest[i]);
+			 * //citytestArray.push(cityttest[i]); console.log(">>>>>>>> i : ",
+			 * i); } else { console.log("보유중인 건물 없음"); } }
+			 * console.log("testArray : ", testArray);
+			 * console.log("citytestArray : ", citytestArray);
+			 * //console.log("playerBuild : ", playerBuild);
+			 */
        }
        //주인이 있으면 땅 가격만큼 가진 돈에서 차감
        console.log("결제 전 머니: ", gamer.money);
