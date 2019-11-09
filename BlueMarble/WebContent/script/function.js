@@ -319,25 +319,24 @@ function pay(gamer){
     			   sellCity = cityNameReturn(sellCityName);
     			   console.log("sellCity : ", sellCity);
     			   //판매 팝업 생성
-    			   sellBuild = "<span id='sellSpan'>"+$(id).find(".city").text()+"<br>";
+    			   sellBuild = "<span class='sellSpan'>"+sellCityName+"<br>";
     			   if(sellCity.대지구매여부 == 1){
-    				   sellBuild += "<span id='sellLandDiv'>대지<input type='checkbox' disabled='disabled'></span>";
+    				   sellBuild += "<span class='sellLandDiv'>대지<input type='checkbox' class='sellLand' class='landCheck' disabled='disabled'><span class='sellLandGold'>"+sellCity.대지료구매+"</span>원</span>";
     			   }
     			   if(sellCity.별장구매여부 == 1){
-    				   sellBuild += "<span id='sellVillaDiv'>별장<input type='checkbox'></span><br>";
+    				   sellBuild += "<span class='sellVillaDiv'>별장<input type='checkbox' class='sellVilla' class='check'><span class='sellVillaGold'>"+sellCity.빌라구매+"</span>원</span><br>";
     			   }
     			   if(sellCity.빌딩구매여부 == 1){
-    				   sellBuild += "<span id='sellBuildingDiv'>빌딩<input type='checkbox'></span>";
+    				   sellBuild += "<span class='sellBuildingDiv'>빌딩<input type='checkbox' class='sellBuilding' class='check'><span class='sellBuildingGold'>"+sellCity.빌딩구매+"</span>원</span>";
     			   }
     			   if(sellCity.호텔구매여부 == 1){
-    				   sellBuild += "<span id='sellHotelDiv'>호텔<input type='checkbox'></span><br>";
+    				   sellBuild += "<span class='sellHotelDiv'>호텔<input type='checkbox' class='sellHotel' class='check'><span class='sellHotelGold'>"+sellCity.호텔구매+"</span>원</span><br>";
     			   }
     			   //판매, 취소버튼 생성
     			   sellBuild += "<button type='button' id='sell'>판매</button>";
     			   sellBuild += "<button type='button' id='sellCancel'>취소</button></div>";
     			   sellBuild += "</span>";
     			   $("#sellBuild").append(sellBuild);
-    			   
     		   }
     	   }
 		   // 땅 구매여부를 선택할때까지 주사위 비활성화
@@ -348,6 +347,10 @@ function pay(gamer){
 				   $(".ui-dialog-titlebar-close", $(this).parent()).hide();
 			   }
 		   });
+		   //check 클래스에 아무것도 없으면 대지 체크박스 활성화
+		   if($(".check").length == 0){
+				$(".landCheck").attr("disabled", false);
+		   }
 		   //모든 건물이 체크되면 대지 체크박스 활성화
 		   $(".check").change(function(){
 				if($(".check:checked").length == $(".check").length){
@@ -356,8 +359,26 @@ function pay(gamer){
 					$(".landCheck").attr("disabled", true);
 				}
 		   });
-		   $("#sell").click(function() {
-			   
+		   //판매 버튼 클릭시 체크박스 체크여부 판단 후 구매료만큼 돈 반환
+		   $("#sell").on("click", function() {
+			   console.log("판매 버튼 클릭!");
+			   if($("input:checkbox[class='sellLand']").is(":checked") == true){
+				   console.log("대지 판매");
+				   gamer.money += $(this).closest(".sellSpan").find(".sellLandGold").text();
+			   }
+			   if($("input:checkbox[class='sellVilla']").is(":checked") == true){
+				   console.log("별장 판매");
+				   gamer.money += $(this).closest(".sellSpan").find(".sellVillaGold").text();
+			   }
+			   if($("input:checkbox[class='sellBuilding']").is(":checked") == true){
+				   console.log("빌딩 판매");
+				   gamer.money += $(this).closest(".sellSpan").find(".sellBuildingGold").text();
+			   }
+			   if($("input:checkbox[class='sellHotel']").is(":checked") == true){
+				   console.log("호텔 판매");
+				   gamer.money += $(this).closest(".sellSpan").find(".sellHotelGold").text();
+			   }
+			   $("#player"+gamer.player+"money").val(gamer.money);
 		   });
     	   /*
 			 * testArray = []; citytestArray = []; test =

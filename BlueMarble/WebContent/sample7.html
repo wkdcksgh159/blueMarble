@@ -203,7 +203,6 @@
             if(gamer.beforePoint == 11){
             	gamer.round = island(gamer, ran1, ran2);
             }
-            //버튼 따로 빼야됨 계속 이동가능함
           	//현재위치가 우주여행일때
             if(gamer.beforePoint == 31){
             	console.log("우주여행 시작!");
@@ -233,12 +232,6 @@
                	//위치 그대로
                	console.log("round gamer.beforePoint", gamer.beforePoint);
                	gamer.afterId = gamer.beforeId;
-               
-            	/*
-            	console.log("round gamer.afterId", gamer.afterId);
-            	$(gamer.beforeId).find(".btn-danger"+player).remove();
-            	$(gamer.beforeId).append(html);
-            	*/
             }
             
             //밟은 땅 주인 체크

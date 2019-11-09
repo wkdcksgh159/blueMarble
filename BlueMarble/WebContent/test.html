@@ -9,7 +9,6 @@
 		display:inline-block;
 		font-size:20px;
       	width: 180px;
-        height: 170px;
 		text-align:center;
 		border:1px solid;
 	}
@@ -20,19 +19,29 @@
 	<span id="sellSpan">
 		<div><br>타이페이</div>
 		<div>
-			<span>대지<input type="checkbox" class="landCheck" disabled="disabled"></span>
-			<span>별장<input type="checkbox" class="check"></span><br>
-			<span>빌딩<input type="checkbox" class="check"></span>
-			<span>호텔<input type="checkbox" class="check"></span>
+			<span>대지<input type="checkbox" id="sellLand" class="landCheck" disabled="disabled"><span class="sellLandGold">50000</span>원</span><br>
+			<span id="sellVillaDiv">별장<input type="checkbox" id="sellVilla" class="check"><span id="sellVillaGold">100000</span>원</span><br>
+			<span>빌딩<input type="checkbox" id="sellBuilding" class="check"><span id="sellBuildingGold">150000</span>원</span><br>
+			<span>호텔<input type="checkbox" id="sellHotel" class="check"><span id="sellHotelGold">200000</span>원</span><br>
+			<button type='button' id='sell'>판매</button>
 		</div>
 	</span>
 </body>
 <script>
 	$(document).ready(function(){
+		if($(".check").length == 0){
+			$(".landCheck").attr("disabled", false);
+		}
 		$(".check").change(function(){
 			if($(".check:checked").length == $(".check").length){
 				$(".landCheck").attr("disabled", false);
+			} else {
+				$(".landCheck").attr("disabled", true);
 			}
+		});
+		$("#sell").on("click", function(){
+			c = $("#sell").closest("div").find(".sellLandGold").text();
+			console.log("판매가격 :",c);
 		});
 	});
 	
