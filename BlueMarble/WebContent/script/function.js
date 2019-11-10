@@ -308,7 +308,7 @@ function pay(gamer){
     	}
     	
     } else {
-       //현재 돈이 없을경우
+       //밟은땅의 통행료보다 현재 돈이 적을경우
        if(gamer.money < 1){
     	   console.log("player 클래스 불러옴");
     	   for(i=1;i<41;i++){
@@ -321,20 +321,20 @@ function pay(gamer){
     			   //판매 팝업 생성
     			   sellBuild = "<span class='sellSpan'>"+sellCityName+"<br>";
     			   if(sellCity.대지구매여부 == 1){
-    				   sellBuild += "<span class='sellLandDiv'>대지<input type='checkbox' class='sellLand' class='landCheck' disabled='disabled'><span class='sellLandGold'>"+sellCity.대지료구매+"</span>원</span>";
+    				   sellBuild += "<span class='landCheck'>대지<input type='checkbox' class='sellLand' disabled='disabled'><span class='sellLandGold'>"+sellCity.대지료구매+"</span>원</span>";
     			   }
     			   if(sellCity.별장구매여부 == 1){
-    				   sellBuild += "<span class='sellVillaDiv'>별장<input type='checkbox' class='sellVilla' class='check'><span class='sellVillaGold'>"+sellCity.빌라구매+"</span>원</span><br>";
+    				   sellBuild += "<span class='check'>별장<input type='checkbox' class='sellVilla'><span class='sellVillaGold'>"+sellCity.빌라구매+"</span>원</span><br>";
     			   }
     			   if(sellCity.빌딩구매여부 == 1){
-    				   sellBuild += "<span class='sellBuildingDiv'>빌딩<input type='checkbox' class='sellBuilding' class='check'><span class='sellBuildingGold'>"+sellCity.빌딩구매+"</span>원</span>";
+    				   sellBuild += "<span class='check'>빌딩<input type='checkbox' class='sellBuilding'><span class='sellBuildingGold'>"+sellCity.빌딩구매+"</span>원</span>";
     			   }
     			   if(sellCity.호텔구매여부 == 1){
-    				   sellBuild += "<span class='sellHotelDiv'>호텔<input type='checkbox' class='sellHotel' class='check'><span class='sellHotelGold'>"+sellCity.호텔구매+"</span>원</span><br>";
+    				   sellBuild += "<span class='check'>호텔<input type='checkbox' class='sellHotel'><span class='sellHotelGold'>"+sellCity.호텔구매+"</span>원</span><br>";
     			   }
     			   //판매, 취소버튼 생성
-    			   sellBuild += "<button type='button' id='sell'>판매</button>";
-    			   sellBuild += "<button type='button' id='sellCancel'>취소</button></div>";
+    			   sellBuild += "<button type='button' class='sell'>판매</button>";
+    			   sellBuild += "<button type='button' class='sellCancel'>취소</button><br>";
     			   sellBuild += "</span>";
     			   $("#sellBuild").append(sellBuild);
     		   }
@@ -347,9 +347,10 @@ function pay(gamer){
 				   $(".ui-dialog-titlebar-close", $(this).parent()).hide();
 			   }
 		   });
+		   console.log("$('.check').length", $(".check").length);
 		   //check 클래스에 아무것도 없으면 대지 체크박스 활성화
 		   if($(".check").length == 0){
-				$(".landCheck").attr("disabled", false);
+				$(".sellLand").attr("disabled", false);
 		   }
 		   //모든 건물이 체크되면 대지 체크박스 활성화
 		   $(".check").change(function(){
@@ -360,21 +361,21 @@ function pay(gamer){
 				}
 		   });
 		   //판매 버튼 클릭시 체크박스 체크여부 판단 후 구매료만큼 돈 반환
-		   $("#sell").on("click", function() {
+		   $(".sell").on("click", function() {
 			   console.log("판매 버튼 클릭!");
-			   if($("input:checkbox[class='sellLand']").is(":checked") == true){
+			   if($("input:checkbox[id='sellLand']").is(":checked") == true){
 				   console.log("대지 판매");
-				   gamer.money += $(this).closest(".sellSpan").find(".sellLandGold").text();
+				   gamer.money += parseInt($(this).closest(".sellSpan").find(".sellLandGold").text());
 			   }
-			   if($("input:checkbox[class='sellVilla']").is(":checked") == true){
+			   if($("input:checkbox[id='sellVilla']").is(":checked") == true){
 				   console.log("별장 판매");
 				   gamer.money += $(this).closest(".sellSpan").find(".sellVillaGold").text();
 			   }
-			   if($("input:checkbox[class='sellBuilding']").is(":checked") == true){
+			   if($("input:checkbox[id='sellBuilding']").is(":checked") == true){
 				   console.log("빌딩 판매");
 				   gamer.money += $(this).closest(".sellSpan").find(".sellBuildingGold").text();
 			   }
-			   if($("input:checkbox[class='sellHotel']").is(":checked") == true){
+			   if($("input:checkbox[id='sellHotel']").is(":checked") == true){
 				   console.log("호텔 판매");
 				   gamer.money += $(this).closest(".sellSpan").find(".sellHotelGold").text();
 			   }
