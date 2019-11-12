@@ -34,7 +34,7 @@
 <script src="/BlueMarble/script/jquery-ui.js"></script>
 <script src="/BlueMarble/script/player.js"></script>
 <script src="/BlueMarble/script/city.js"></script>
-<script src="/BlueMarble/script/function2.js"></script>
+<script src="/BlueMarble/script/function3.js"></script>
 <body>
 <h3>
    부르마블
@@ -137,7 +137,7 @@
 <script>
    $(document).ready(function(){
 	 //플레이어 초기화
-      let player = 1;
+      let player = 0;
 	  $("#diceBtn").attr("disabled", true);
 	  //인원수 파악
 	  start = false;
@@ -153,6 +153,12 @@
 			  start = false;
 		  }
 	  }
+	  //유저 세팅
+	  gamer = [Player1, Player2, Player3, Player4];
+	  console.log("최대 유저 : ", allPlayer);
+	  gamer = gamer.slice(0, allPlayer);
+	  console.log("현재 유저 : ", gamer);
+	  
 	  //플레이어 수 만큼 돈, 이미지 세팅
 	  for(i=1; i <= allPlayer; i++){
 		  let playerMoneyHtml = "플레이어"+i+" 돈 : <input type='text' id='player"+i+"money' value='3000000'>";
@@ -164,6 +170,9 @@
 	  }
       //주사위 클릭시
       $("#diceBtn").click(function(){
+    	console.log("주사위 눌렀을때 player : ", player);
+    	currentGamer = gamer[player];
+    	console.log("currentGamer : ", currentGamer);
     	//테이블 클릭잠금
     	$(".place").off("click");
       	//$(".place").attr("disabled", true);
@@ -172,70 +181,49 @@
     	 console.log("ran1 : ", ran1);
          let ran2 = Math.floor(Math.random()*6+1);
          console.log("ran2 : ", ran2);
-         ran = 15;//ran1+ran2;
+         ran = ran1+ran2;
          $("#diceValue").val(ran);
     	 $("#player").val(player);
-         console.log("gamer : ",player);
-         //플레이어 구분
-         gamer = [Player1, Player2, Player3, Player4];
-         gamer[player];
-         switch(player){
-	        case 1:
-	        	gamer = Player1;
-	        	console.log("Player1");
-	        	break;
-	        case 2:
-	        	gamer = Player2;
-	        	console.log("Player2");
-	        	break;
-	        case 3:
-	        	gamer = Player3;
-	        	console.log("Player3");
-	        	break;
-	        case 4:
-	        	gamer = Player4;
-	        	console.log("Player4");
-	        	break;
-	        default:
-	        	
-         }
+         console.log("currentGamer : ",currentGamer);
             //주사위를 굴렸을때 이동지점
-            if(gamer.beforePoint+ran < 41){
-            	gamer.afterPoint = gamer.beforePoint+ran;
+            if(currentGamer.beforePoint+ran < 41){
+            	currentGamer.afterPoint = currentGamer.beforePoint+ran;
             } else {
-            	gamer.afterPoint = gamer.beforePoint+ran-40;
+            	currentGamer.afterPoint = currentGamer.beforePoint+ran-40;
             }
             //이동지점 내용 입력
-            $("#point").val(gamer.afterPoint);
-            console.log("gamer.round : ", gamer.round);
+            $("#point").val(currentGamer.afterPoint);
+            console.log("currentGamer.round : ", currentGamer.round);
           	//이동한 지점에 유저 버튼 생성
-            let html = "<img class='btn-danger"+gamer.player+"' src='/jquery-prac/image/pic0"+gamer.player+".jpg'>";
-            gamer.beforeId = "#p"+gamer.beforePoint;
-            gamer.afterId = "#p"+gamer.afterPoint;
-            console.log("gamer.afterId : ", gamer.afterId);
+            let html = "<img class='btn-danger"+currentGamer.player+"' src='/jquery-prac/image/pic0"+currentGamer.player+".jpg'>";
+            currentGamer.beforeId = "#p"+currentGamer.beforePoint;
+            currentGamer.afterId = "#p"+currentGamer.afterPoint;
+            console.log("currentGamer.afterId : ", currentGamer.afterId);
             
             //현재위치가 무인도일때
-            if(gamer.beforePoint == 11){
-            	gamer.round = island(gamer, ran1, ran2);
+            if(currentGamer.beforePoint == 11){
+            	alert("세턴동안 무인도에 갇혀있습니다 현재 "+currentGamer.round+"턴째");
+            	currentGamer.round = island(currentGamer, ran1, ran2);
             }
           	//현재위치가 우주여행일때
-            if(gamer.beforePoint == 31){
+            if(currentGamer.beforePoint == 31){
             	//주사위 버튼 잠금
             	$("#diceBtn").attr("disabled", true);
             	console.log("우주여행 시작!");
+            	alert("우주여행 시작!");
             	$(".place").on("click", function(){
             		console.log("우주여행 클릭!");
-            		gamer.beforeId = "#p" + gamer.beforePoint;
-            		console.log("우주여행 gamer.beforePoint", gamer.beforePoint);
-            		gamer.afterPoint = $(this).find(".placePoint").text();
-            		gamer.afterId = "#p" + gamer.afterPoint;
-            		console.log("우주여행 gamer.afterPoint", gamer.afterPoint);
-            		$(gamer.beforeId).find(".btn-danger"+gamer.player).remove();
-            		$(this).append("<img class='btn-danger"+gamer.player+"' src='/jquery-prac/image/pic0"+gamer.player+".jpg'>");
-            		gamer.beforePoint = parseInt(gamer.afterPoint);
-            		gamer.round = 0;
+            		currentGamer.beforeId = "#p" + currentGamer.beforePoint;
+            		console.log("우주여행 currentGamer.beforePoint", currentGamer.beforePoint);
+            		currentGamer.afterPoint = $(this).find(".placePoint").text();
+            		currentGamer.afterId = "#p" + currentGamer.afterPoint;
+            		console.log("우주여행 currentGamer.afterPoint", currentGamer.afterPoint);
+            		$(currentGamer.beforeId).find(".btn-danger"+currentGamer.player).remove();
+            		$(this).append("<img class='btn-danger"+currentGamer.player+"' src='/jquery-prac/image/pic0"+currentGamer.player+".jpg'>");
+            		currentGamer.beforePoint = parseInt(currentGamer.afterPoint);
+            		currentGamer.round = 0;
             		//땅을 구매하거나 통행료를 지불하는 함수
-            		pay(gamer);
+            		pay(currentGamer);
             		//테이블 클릭잠금
                 	$(".place").off("click");
                 	//주사위 버튼 잠금 해제
@@ -243,22 +231,22 @@
             	});
             }
             //round 체크
-            if(gamer.round == 0){
+            if(currentGamer.round == 0){
             	//위치 이동
-            	$(gamer.beforeId).find(".btn-danger"+gamer.player).remove();
-                $(gamer.afterId).append(html);
+            	$(currentGamer.beforeId).find(".btn-danger"+currentGamer.player).remove();
+                $(currentGamer.afterId).append(html);
               	//이동위치를 현재위치로 변경
-                gamer.beforePoint = gamer.afterPoint;
+                currentGamer.beforePoint = currentGamer.afterPoint;
             } else {
                	//위치 그대로
-               	console.log("round gamer.beforePoint", gamer.beforePoint);
-               	gamer.afterId = gamer.beforeId;
+               	console.log("round currentGamer.beforePoint", currentGamer.beforePoint);
+               	currentGamer.afterId = currentGamer.beforeId;
             }
             //땅을 구매하거나 통행료를 지불하는 함수
-            pay(gamer);
+            gamer = pay(currentGamer);
             
           	//더블을 확인하는 함수
-            player = doubleDice(ran1, ran2, player, allPlayer);
+            player = doubleDice(ran1, ran2, player, gamer);
             console.log("-----------------------");
       });
    });

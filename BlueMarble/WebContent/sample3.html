@@ -23,8 +23,8 @@
 <script src="/BlueMarble/script/city.js"></script>
 <body>
 <h3>
-   부르마블
-   <button type="button" id="diceBtn">King Dice!</button>
+   부루마블
+  <button type="button" id="diceBtn">King Dice!</button>
    현재 플레이어 : <input type="text" id="player" value="">
    주사위 값 : <input type="text" id="diceValue" value="">
    이동지점 : <input type="text" id="point" value="">
@@ -127,6 +127,14 @@
 			  start = false;
 		  }
 	  }
+	  //플레이어
+      let player = 0;
+	  
+	  gamer = [Player1, Player2, Player3, Player4];
+	  
+	  gamer.splice(player,1);
+	  console.log(gamer);
+	  gamer.slice(0, allPlayer);
 	  //플레이어 수 만큼 돈, 이미지 세팅
 	  for(i=1; i < parseInt(allPlayer)+1; i++){
 		  let playerMoneyHtml = "플레이어"+i+" 돈 : <input type='text' id='player"+i+"money' value='3000000'>";
@@ -136,8 +144,7 @@
 		  let playerHtml = "<img class='btn-danger"+i+"' src='/jquery-prac/image/pic0"+i+".jpg'>";
 		  $("#btn").append(playerHtml);
 	  }
-	  //플레이어
-      let player = 1;
+	  
       //주사위 클릭시
       $("#diceBtn").click(function(){
     	 let dialogHtml = "<div id='dialog' title='도시이름'>대지 <input type='radio' name='build' id='land' checked='checked'><span id='landToll'></span><br>별장 <input type='radio' name='build' id='villa'><span id='villaToll'></span><br>빌딩 <input type='radio' name='build' id='building'><span id='buildingToll'></span><br>호텔 <input type='radio' name='build' id='hotel'><span id='hotelToll'></span><br><button type='button' id='buy'>구매</button><button type='button' id='cancel'>취소</button></div>";
@@ -150,48 +157,30 @@
          ran = ran1+ran2
          $("#diceValue").val(ran);
          
+         currentGamer = gamer[player];
          
-         
-    	 $("#player").val(player);
-         console.log("gamer : ",player);
-         //플레이어 구분
-         switch(player){
-	        case 1:
-	        	gamer = Player1;
-	        	console.log("Player1");
-	        	break;
-	        case 2:
-	        	gamer = Player2;
-	        	console.log("Player2");
-	        	break;
-	        case 3:
-	        	gamer = Player3;
-	        	console.log("Player3");
-	        	break;
-	        case 4:
-	        	gamer = Player4;
-	        	console.log("Player4");
-	        	break;
-         }
-         $("#player"+player+"money").val(gamer.money);
+         $("#player").val(currentGamer.player);
+         console.log("currentGamer : ",currentGamer);
+         $("#player"+currentGamer.player+"money").val(currentGamer.money);
             //주사위를 굴렸을때 이동지점
-            if(gamer.beforePoint+ran < 41){
-            	gamer.afterPoint = gamer.beforePoint+ran;
+            if(currentGamer.beforePoint+ran < 41){
+            	currentGamer.afterPoint = currentGamer.beforePoint+ran;
             } else {
-            	gamer.afterPoint = gamer.beforePoint+ran-40;
+            	currentGamer.afterPoint = currentGamer.beforePoint+ran-40;
             }
-            $("#point").val(gamer.afterPoint);
+            $("#point").val(currentGamer.afterPoint);
             //이동한 지점에 유저 버튼 생성
-            let html = "<img class='btn-danger"+player+"' src='/jquery-prac/image/pic0"+player+".jpg'>";
-            gamer.beforeId = "#p"+gamer.beforePoint;
-            gamer.afterId = "#p"+gamer.afterPoint;
-            console.log("gamer.afterId : ", gamer.afterId);
-            $(gamer.afterId).append(html);
-            $(gamer.beforeId).find(".btn-danger"+player).remove();
-            gamer.beforePoint = gamer.afterPoint;
+            let html = "<img class='btn-danger"+currentGamer.player+"' src='/jquery-prac/image/pic0"+currentGamer.player+".jpg'>";
+            currentGamer.beforeId = "#p"+currentGamer.beforePoint;
+            currentGamer.afterId = "#p"+currentGamer.afterPoint;
+            console.log("currentGamer.afterId : ", currentGamer.afterId);
+            $(currentGamer.afterId).append(html);
+            $(currentGamer.beforeId).find(".btn-danger"+currentGamer.player).remove();
+            currentGamer.beforePoint = currentGamer.afterPoint;
             //밟은 땅 주인 체크
-            if($(gamer.afterId).find(".player").text() == 0){
-            	cityName = $(gamer.afterId).find(".city").text();
+            if($(currentGamer.afterId).find(".player").text() == 0){
+            	console.log("밟은땅 위치", currentGamer.afterId);
+            	cityName = $(currentGamer.afterId).find(".city").text();
             	console.log("cityName : ", cityName);
             	let city = "";
             	switch(cityName){
@@ -310,53 +299,55 @@
                 	$("#buildingToll").text(" 통행료 "+ city.빌딩통행시+"원");
                 	$("#hotelToll").text(" 통행료 "+ city.호텔통행시+"원");
                 	$("#buy").click(function(){
+                		console.log("현재 gamer : ", currentGamer);
+                		console.log("구매 위치", currentGamer.afterId);
                 		console.log("buy 클릭 실행!");
-                		console.log("buy player : ", player);
+                		console.log("buy player : ", currentGamer.player);
                 		if($('input[name="build"]:checked').is("#land")){
-                			console.log("땅 구매 : ", player);
+                			console.log("땅 구매 : ", currentGamer.player);
                 			//땅 주인 세팅 (플레이어1 이면 1 이 들어감)
-                            $(gamer.afterId).find(".player").text(player);
+                            $(currentGamer.afterId).find(".player").text(currentGamer.player);
                           	//주인이없으면 땅 가격 세팅
-                          	$(gamer.afterId).find(".gold").text(city.대지료통행시);
-                          	console.log("대지료구매 전 머니", gamer.money);
+                          	$(currentGamer.afterId).find(".gold").text(city.대지료통행시);
+                          	console.log("대지료구매 전 머니", currentGamer.money);
                           	console.log("구매료 : ", city.대지료구매);
-                          	gamer.money = gamer.money-city.대지료구매;
-                          	console.log("대지료구매 후 머니", gamer.money);
-                          	$("#player"+player+"money").val(gamer.money);
+                          	currentGamer.money = currentGamer.money-city.대지료구매;
+                          	console.log("대지료구매 후 머니", currentGamer.money);
+                          	$("#player"+currentGamer.player+"money").val(currentGamer.money);
                 		}
                 		if($('input[name="build"]:checked').is("#villa")){
                 			//별장 주인 세팅 (플레이어1 이면 1 이 들어감)
-                            $(gamer.afterId).find(".player").text(player);
+                            $(currentGamer.afterId).find(".player").text(currentGamer.player);
                             //주인이없으면 별장 가격 세팅
-                            $(gamer.afterId).find(".gold").text(city.별장통행시);
-                            console.log("별장구매 전 머니", gamer.money);
+                            $(currentGamer.afterId).find(".gold").text(city.별장통행시);
+                            console.log("별장구매 전 머니", currentGamer.money);
                             console.log("구매료 : ", city.대지료구매+city.별장구매);
-                          	gamer.money = gamer.money-city.대지료구매-city.별장구매;
-                          	console.log("별장구매 후 머니", gamer.money);
-                          	$("#player"+player+"money").val(gamer.money);
+                          	currentGamer.money = currentGamer.money-city.대지료구매-city.별장구매;
+                          	console.log("별장구매 후 머니", currentGamer.money);
+                          	$("#player"+currentGamer.player+"money").val(currentGamer.money);
                           	
                 		}
                 		if($('input[name="build"]:checked').is("#building")){
                 			//빌딩 주인 세팅 (플레이어1 이면 1 이 들어감)
-                            $(gamer.afterId).find(".player").text(player);
+                            $(currentGamer.afterId).find(".player").text(currentGamer.player);
                             //주인이없으면 빌딩 가격 세팅
-                            $(gamer.afterId).find(".gold").text(city.빌딩통행시);
-                            console.log("빌딩구매 전 머니", gamer.money);
+                            $(currentGamer.afterId).find(".gold").text(city.빌딩통행시);
+                            console.log("빌딩구매 전 머니", currentGamer.money);
                             console.log("구매료 : ", city.대지료구매+city.빌딩구매);
-                          	gamer.money = gamer.money-city.대지료구매-city.빌딩구매;
-                          	console.log("빌딩구매 후 머니", gamer.money);
-                          	$("#player"+player+"money").val(gamer.money);
+                          	currentGamer.money = currentGamer.money-city.대지료구매-city.빌딩구매;
+                          	console.log("빌딩구매 후 머니", currentGamer.money);
+                          	$("#player"+currentGamer.player+"money").val(currentGamer.money);
                 		}
                 		if($('input[name="build"]:checked').is("#hotel")){
                 			//호텔 주인 세팅 (플레이어1 이면 1 이 들어감)
-                            $(gamer.afterId).find(".player").text(player);
+                            $(currentGamer.afterId).find(".player").text(currentGamer.player);
                             //호텔 가격 세팅
-                            $(gamer.afterId).find(".gold").text(city.호텔통행시);
-                            console.log("호텔구매 전 머니", gamer.money);
+                            $(currentGamer.afterId).find(".gold").text(city.호텔통행시);
+                            console.log("호텔구매 전 머니", currentGamer.money);
                             console.log("구매료 : ", city.대지료구매+city.호텔구매);
-                          	gamer.money = gamer.money-city.대지료구매-city.호텔구매;
-                          	console.log("호텔구매 후 머니", gamer.money);
-                          	$("#player"+player+"money").val(gamer.money);
+                          	currentGamer.money = currentGamer.money-city.대지료구매-city.호텔구매;
+                          	console.log("호텔구매 후 머니", currentGamer.money);
+                          	$("#player"+currentGamer.player+"money").val(currentGamer.money);
                 		}
                         //주사위 활성화
                 		$("#diceBtn").attr("disabled", false);
@@ -371,7 +362,7 @@
                 		$("#dialog").remove();
                 	});
             	} else {
-            		event = $(gamer.afterId).find(".event").text();
+            		event = $(currentGamer.afterId).find(".event").text();
             		switch(event){
 	            		case "황금열쇠":
 	            			console.log("황금열쇠 도착!");
@@ -393,18 +384,18 @@
             	}
             } else {
                //주인이 있으면 땅 가격만큼 가진 돈에서 차감
-               console.log("결제 전 머니: ", gamer.money);
-               gamer.money = gamer.money-($(gamer.afterId).find(".gold").text());
-               console.log("결제 후 머니: ", gamer.money);
-               $("#player"+player+"money").val(gamer.money);
+               console.log("결제 전 머니: ", currentGamer.money);
+               currentGamer.money = currentGamer.money-($(currentGamer.afterId).find(".gold").text());
+               console.log("결제 후 머니: ", currentGamer.money);
+               $("#player"+currentGamer.player+"money").val(currentGamer.money);
                $("#dialog").remove();
             }
             // 플레이어 변경
             if(ran1 != ran2){
            	 	player++;
-           	 if(player>allPlayer){
+           	 if(player>gamer.length){
            		 console.log("allPlayer : ", allPlayer);
-               	 player = player-allPlayer;
+               	 player = player-gamer.length;
              }
             } else {
            	 console.log("더블!");
