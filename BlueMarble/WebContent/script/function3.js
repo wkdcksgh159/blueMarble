@@ -217,6 +217,8 @@ function pay(currentGamer){
     		//땅 구매여부를 선택할때까지 주사위 비활성화
         	$("#diceBtn").attr("disabled", true);
         	$("#dialog").dialog({
+        		"width":"auto",
+        		"height":"auto",
         		closeOnEscape: false,
         	    open: function(event, ui) {
         	            $(".ui-dialog-titlebar-close", $(this).parent()).hide();
@@ -231,10 +233,10 @@ function pay(currentGamer){
         		$("#buildingDiv").show();
         		$("#hotelDiv").show();
         	}
-        	$("#landToll").text(" 구매료 "+ city.대지료구매+"원"+"\n"+"     통행료"+city.대지료통행시+"원");
-        	$("#villaToll").text(" 구매료 "+ city.별장구매+"원"+"\n"+"     통행료"+city.별장통행시+"원");
-        	$("#buildingToll").text(" 구매료 "+ city.빌딩구매+"원"+"\n"+"     통행료"+city.빌딩통행시+"원");
-        	$("#hotelToll").text(" 구매료 "+ city.호텔구매+"원"+"\n"+"    통행료"+city.호텔통행시+"원");
+        	$("#landToll").text(" 구매료 "+ city.대지료구매+"원"+" / 통행료"+city.대지료통행시+"원");
+        	$("#villaToll").text(" 구매료 "+ city.별장구매+"원"+" / 통행료"+city.별장통행시+"원");
+        	$("#buildingToll").text(" 구매료 "+ city.빌딩구매+"원"+" / 통행료"+city.빌딩통행시+"원");
+        	$("#hotelToll").text(" 구매료 "+ city.호텔구매+"원"+" / 통행료"+city.호텔통행시+"원");
         	
         	$("input[name='build']").click(function(){
         		if($(this).prop("checked")){
@@ -315,6 +317,7 @@ function pay(currentGamer){
         			break;
         		case "사회복지기금(내는곳)":
         			console.log("사회복지기금(내는곳) 도착!");
+        			setTimeout(function(){alert("사회복지기금(내는곳) 도착하셨습니다 사회복지기금 15만원을 지불합니다.")}, 0);
         			currentGamer.money = donateGive(currentGamer, player);
         			console.log("donatecurrentGamer : ",currentGamer.money);
         			console.log("donatePlayer : ", player);
@@ -322,6 +325,7 @@ function pay(currentGamer){
         			break;
         		case "사회복지기금(받는곳)":
         			console.log("사회복지기금(받는곳) 도착!");
+        			setTimeout(function(){alert("사회복지기금(받는곳) 도착하셨습니다 사회복지기금에 저장된 돈을 받습니다.")}, 0);
         			currentGamer.money = donateReceive(currentGamer);
         			console.log("donateRecurrentGamer : ",currentGamer.money);
         			$("#player"+currentGamer.player+"money").val(currentGamer.money);
