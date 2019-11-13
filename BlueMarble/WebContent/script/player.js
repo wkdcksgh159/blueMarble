@@ -10,7 +10,7 @@ let Player1 = {
 	beforeId : "#p" + beforePoint,
 	afterId : "#p" + afterPoint,
 	round : 0,
-	money : 30000
+	money : 3000000
 }
 
 let Player2 = {
@@ -20,7 +20,7 @@ let Player2 = {
 	beforeId : "#p" + beforePoint,
 	afterId : "#p" + afterPoint,
 	round : 0,
-	money : 30000
+	money : 3000000
 }
 
 let Player3 = {

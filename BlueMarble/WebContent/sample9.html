@@ -35,6 +35,7 @@
 <script src="/BlueMarble/script/player.js"></script>
 <script src="/BlueMarble/script/city.js"></script>
 <script src="/BlueMarble/script/function3.js"></script>
+<script src="/BlueMarble/script/goldenkey.js"></script>
 <body>
 <h3>
    부르마블
@@ -168,6 +169,8 @@
 		  let playerHtml = "<img class='btn-danger"+i+"' src='/jquery-prac/image/pic0"+i+".jpg'>";
 		  $("#btn").append(playerHtml);
 	  }
+	  
+      
       //주사위 클릭시
       $("#diceBtn").click(function(){
     	console.log("주사위 눌렀을때 player : ", player);
@@ -181,7 +184,7 @@
     	 console.log("ran1 : ", ran1);
          let ran2 = Math.floor(Math.random()*6+1);
          console.log("ran2 : ", ran2);
-         ran = ran1+ran2;
+         ran = 2;//ran1+ran2;
          $("#diceValue").val(ran);
     	 $("#player").val(player);
          console.log("currentGamer : ",currentGamer);
@@ -190,6 +193,8 @@
             	currentGamer.afterPoint = currentGamer.beforePoint+ran;
             } else {
             	currentGamer.afterPoint = currentGamer.beforePoint+ran-40;
+            	currentGamer.money += 200000;
+            	$("#player"+currentGamer.player+"money").val(currentGamer.money);
             }
             //이동지점 내용 입력
             $("#point").val(currentGamer.afterPoint);
@@ -216,6 +221,10 @@
             		currentGamer.beforeId = "#p" + currentGamer.beforePoint;
             		console.log("우주여행 currentGamer.beforePoint", currentGamer.beforePoint);
             		currentGamer.afterPoint = $(this).find(".placePoint").text();
+            		if(currentGamer.afterPoint < 31){
+            			currentGamer.money += 200000;
+                    	$("#player"+currentGamer.player+"money").val(currentGamer.money);
+            		}
             		currentGamer.afterId = "#p" + currentGamer.afterPoint;
             		console.log("우주여행 currentGamer.afterPoint", currentGamer.afterPoint);
             		$(currentGamer.beforeId).find(".btn-danger"+currentGamer.player).remove();
@@ -249,6 +258,11 @@
             player = doubleDice(ran1, ran2, player, gamer);
             console.log("-----------------------");
       });
+      
+      $("#goldenKey").click(function(){
+    	   
+      });
+      
    });
 </script>
 </html>
