@@ -8,14 +8,14 @@ let player;
 
 function minusMoney(currentGamer,cardMoney){
 	console.log(currentGamer);
-	currentGamer.money = currentGamer.money - cardMoney;
+	currentGamer.money = currentGamer.money - parseInt(cardMoney);
  	console.log(currentGamer.money);
     $("#player"+currentGamer.player+"money").val(currentGamer.money);
 }
 
 function plusMoney(currentGamer,cardMoney){
 	console.log(currentGamer);
-	currentGamer.money = currentGamer.money + cardMoney;
+	currentGamer.money = currentGamer.money + parseInt(cardMoney);
  	console.log(currentGamer.money);
 	$("#player"+currentGamer.player+"money").val(currentGamer.money);
 }
@@ -24,7 +24,7 @@ function cardMove(currentGamer,cardAfterPoint, cardAfterId){
 	console.log(currentGamer);
 	currentGamer.afterPoint = cardAfterPoint;
     $("#point").val(currentGamer.afterPoint);
- 	html = "<img class='btn-danger"+currentGamer.player+"' src='/BlueMarvel/images/p"+currentGamer.player+".png'>";
+ 	html = "<img class='btn-danger"+currentGamer.player+"' src='/BlueMarble/image/pic0"+currentGamer.player+".jpg'>";
  	currentGamer.beforeId = "#p"+currentGamer.beforePoint;
  	currentGamer.afterId = "#p"+cardAfterId;
     $(currentGamer.afterId).append(html);

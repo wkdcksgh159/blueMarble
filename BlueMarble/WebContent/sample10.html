@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <title>sample</title>
 <style>
-   td{
+   .blueMarbleTable td{
       font-size:9px;
       width: 150px;
-       height: 80px;
-       text-align:center;
+      height: 80px;
+      text-align:center;
    }
    .gold {
       font-size:20px;
@@ -21,18 +21,36 @@
       display:none;
    }
    #sellSpan {
-		display:inline-block;
-		font-size:20px;
-      	width: 180px;
-		text-align:center;
-		border:1px solid;
-	}
-	.blueMarbleTable {
-		display:inline-block;
-	}
-	#playerTable {
-		position:absolute;
-	}
+	  display:inline-block;
+	  font-size:20px;
+      width: 180px;
+	  text-align:center;
+	  border:1px solid;
+   }
+   .blueMarbleTable {
+      display:inline-block;
+   }
+   #playerTable {
+      position:relative;
+      vertical-align:top;
+   }
+   img {
+      width:60px;
+   }
+   .playerBoard td{
+      border:1px solid;
+      font-size:20px;
+   }
+   .playerBoard {
+      border:1px solid;
+      margin-bottom:100px;
+      margin-left:10px;
+   }
+/*    #p2 { */
+/*    	  background-image:url("/BlueMarble/image/타이페이.jpg"); */
+/*    	  background-size:100% 100%; */
+/*    	  color:white; */
+/*    } */
 </style>
 </head>
 <link rel="stylesheet" href="/BlueMarble/css/jquery-ui.css">
@@ -57,7 +75,7 @@
 		<table border="1">
 		   <tr>
 		   	  <!-- 나라태그, player:땅의 주인을 확인하는 클래스, city:도시의 이름을 확인하는 클래스, gold:도시의 가격을 확인하는 클래스 주인이없으면 땅값이 출력 -->
-		      <td id="p1" class="place"><div class="placePoint">1</div><div class="player2">0</div>Start<div class="gold">1</div><div id="btn"></div></td>
+		      <td id="p1" class="place"><div class="placePoint">1</div><div class="player2">0</div>Start<div class="gold">1</div><div id="playerImg"></div></td>
 		      <td id="p2" class="place"><div class="placePoint">2</div><div class="player">0</div><div class="city">타이페이</div><div class="gold">50000</div></td>
 		      <td id="p3" class="place"><div class="placePoint">3</div><div class="player2">0</div><div class="event">황금열쇠</div><div class="gold">3</div></td>
 		      <td id="p4" class="place"><div class="placePoint">4</div><div class="player">0</div><div class="city">베이징</div><div class="gold">80000</div></td>
@@ -71,7 +89,7 @@
 		   </tr>
 		   <tr>
 		      <td id="p40" class="place"><div class="placePoint">40</div><div class="player">0</div><div class="city">서울</div><div class="gold">1000000</div></td>
-		      <td rowspan="9" colspan="9"><span id="center"></span></td>
+		      <td rowspan="9" colspan="9" style="background-color:white;"><span id="center"></span></td>
 		      <td id="p12" class="place"><div class="placePoint">12</div><div class="player">0</div><div class="city">아테네</div><div class="gold">140000</div></td>
 		   </tr>
 		   <tr>
@@ -130,42 +148,6 @@
 		</table>
 	</div>
 	<div class="blueMarbleTable" id="playerTable">
-		<table border="1">
-			<tr>
-				<td colspan="2"><img src="/board_Game/images/player1.gif">Player1</td>
-			</tr>
-			<tr>
-				<td>금액</td>
-				<td id="player1_money">3000000</td>
-			</tr>
-		</table>
-		<table border="1">
-			<tr>
-				<td colspan="2"><img src="/board_Game/images/player2.gif">Player2</td>
-			</tr>
-			<tr>
-				<td>금액</td>
-				<td id="player2_money">3000000</td>
-			</tr>
-		</table>
-		<table border="1">
-			<tr>
-				<td colspan="2"><img src="/board_Game/images/player3.gif">Player3</td>
-			</tr>
-			<tr>
-				<td>금액</td>
-				<td id="player3_money">3000000</td>
-			</tr>
-		</table>
-		<table border="1">
-			<tr>
-				<td colspan="2"><img src="/board_Game/images/player4.gif">Player4</td>
-			</tr>
-			<tr>
-				<td>금액</td>
-				<td id="player4_money">3000000</td>
-			</tr>
-		</table>
 	</div>
 </div>
 <!-- dialog태그 넣는곳 -->
@@ -185,6 +167,18 @@
 </body>
 <script>
    $(document).ready(function(){
+	  //지역 이미지 출력
+	  $(".place").each(function(){
+		 let cityText = null;
+		 if($(this).find(".city").length != 0) {
+			cityText = $(this).find(".city").text();
+		 } else {
+			cityText = $(this).find(".event").text();
+		 }
+		 console.log("cityText : ",cityText);
+		 cityImgCSS = {"background-image":"url('/BlueMarble/image/"+cityText+".jpg')","background-size":"100% 100%"};
+		 $(this).css(cityImgCSS);
+	  });
 	 //플레이어 초기화
       let player = 0;
 	  $("#diceBtn").attr("disabled", true);
@@ -210,12 +204,18 @@
 	  
 	  //플레이어 수 만큼 돈, 이미지 세팅
 	  for(i=1; i <= allPlayer; i++){
+		  //돈
 		  let playerMoneyHtml = "플레이어"+i+" 돈 : <input type='text' id='player"+i+"money' value='3000000'>";
 		  $("#allPlayer").append(playerMoneyHtml);
-	  }
-	  for(i=1; i <= allPlayer; i++){
-		  let playerHtml = "<img class='btn-danger"+i+"' src='/jquery-prac/image/pic0"+i+".jpg'>";
-		  $("#btn").append(playerHtml);
+		  //이미지
+		  let playerImgHtml = "<img class='btn-danger"+i+"' src='/BlueMarble/image/pic0"+i+".png'>";
+		  $("#playerImg").append(playerImgHtml);
+		  //우측 현황판
+		  let playerBoardHtml = "<div class='playerBoard'><table>";
+		  playerBoardHtml += "<tr><td colspan='2'><img src='/BlueMarble/image/pic0"+i+".png'><br>Player"+i+"</td></tr>";
+		  playerBoardHtml += "<tr><td>금액</td><td id='player"+i+"_money'>3000000</td></tr>"
+		  playerBoardHtml += "</table></div>";
+		  $("#playerTable").append(playerBoardHtml);
 	  }
 	  
       
@@ -248,7 +248,7 @@
             $("#point").val(currentGamer.afterPoint);
             console.log("currentGamer.round : ", currentGamer.round);
           	//이동한 지점에 유저 버튼 생성
-            let html = "<img class='btn-danger"+currentGamer.player+"' src='/jquery-prac/image/pic0"+currentGamer.player+".jpg'>";
+            let html = "<img class='btn-danger"+currentGamer.player+"' src='/BlueMarble/image/pic0"+currentGamer.player+".png'>";
             currentGamer.beforeId = "#p"+currentGamer.beforePoint;
             currentGamer.afterId = "#p"+currentGamer.afterPoint;
             console.log("currentGamer.afterId : ", currentGamer.afterId);
@@ -276,7 +276,7 @@
             		currentGamer.afterId = "#p" + currentGamer.afterPoint;
             		console.log("우주여행 currentGamer.afterPoint", currentGamer.afterPoint);
             		$(currentGamer.beforeId).find(".btn-danger"+currentGamer.player).remove();
-            		$(this).append("<img class='btn-danger"+currentGamer.player+"' src='/jquery-prac/image/pic0"+currentGamer.player+".jpg'>");
+            		$(this).append("<img class='btn-danger"+currentGamer.player+"' src='/BlueMarble/image/pic0"+currentGamer.player+".png'>");
             		currentGamer.beforePoint = parseInt(currentGamer.afterPoint);
             		currentGamer.round = 0;
             		//땅을 구매하거나 통행료를 지불하는 함수
